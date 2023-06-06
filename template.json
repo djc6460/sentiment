@@ -1,0 +1,17 @@
+{
+    "Actor":{},
+    "Item":{
+        "types":[
+            "gift",
+            "color"
+        ],
+        "gift":{
+            "name": "New Gift",
+            "description": "..."
+        },
+        "color":{
+            "name": "New Color",
+            "hexvalue": "#ffffff"
+        }
+    }
+}

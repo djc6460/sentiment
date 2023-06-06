@@ -1,3 +1,32 @@
 {
-    
+    "name":"sentiment",
+    "title":"Sentiment",
+    "description":"A system for playing Sentiment",
+    "author":"AuRus",
+    "version":0.01,
+    "compatibility": {
+        "minimum": 10,
+        "verified": "10.291",
+        "maximum": 10
+      },
+    "esmodules": [
+        "sentiment.js"
+    ],
+    "styles": [
+        "sentiment.css"
+    ],
+    "packs":[
+        
+    ],
+    "languages":[
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+    "gridDistance": 5,
+    "gridUnits": "ft",
+    "primaryTokenAttribute": "attributes.hp",
+    "initative": "3d6"
 }
