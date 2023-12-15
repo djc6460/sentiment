@@ -1,0 +1,19 @@
+<div class="message-content">
+    <h1>Roll To Recover</h1>
+    <div class="attributeRolls">
+        {{#each colorArray as |color key|}}
+        <a class="btn-selectSwing" data-owner-id="{{../ownerId}}" data-item-id="{{color.colorItem._id}}" data-isRecover='1' data-rollval="{{color.roll._total}}" data-rolltotal="{{../finalTotalNoAtt}}">
+            <div class="colorblock-small inMessage" title="{{color.colorItem.system.displayName}} [{{color.colorItem.system.value}}]" style="background-color: {{color.colorItem.system.hexColor}};">
+                <div>{{color.roll.total}}</div>
+            </div>
+        </a>
+        {{/each}}
+        {{#each colorWoundArray as |color key|}}
+        <div class="colorblock-small inMessage" title="{{color.system.displayName}}" style="background-color: {{color.system.hexColor}};">
+            <div>W</div>
+        </div>
+        {{/each}}
+        {{#if attVal}}<div class="colorattribute" style="color:green">+ {{attVal}}</div>{{/if}}
+    </div>
+    <div class="rolltotal">{{finalTotal}}</div>
+</div>

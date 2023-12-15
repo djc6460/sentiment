@@ -1,0 +1,62 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "templates": {
+      "base": {
+        "health": {
+          "value": 10,
+          "min": 0,
+          "max": 10
+        },
+        "biography": ""
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "attributes": {
+        "experience": {
+          "value": 0
+        }
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "attributes": {
+        "experience": {
+          "value": 0
+        }
+      }
+    }
+  },
+  "Item": {
+    "types": ["color", "gift"],
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "color": {
+      "templates": ["base"],
+      "hexColor": "#FFFF00",
+      "value": 0,
+      "wounded": false,
+      "locked": false,
+      "expanded": false,
+      "displayName":"color",
+      "isSwing":false,
+      "swingValue": 0,
+      "disabled":0
+
+    },
+    "gift":{
+      "templates": ["base"],
+      "isPrimary": false,
+      "showPrimary":false,
+      "showLeveling":false,
+      "isEquipped": false,
+      "expanded": false,
+      "primaryDescription": "",
+      "levelDescription": ""
+    }
+  }
+}
