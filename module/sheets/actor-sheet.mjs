@@ -136,6 +136,8 @@ export class SentimentActorSheet extends ActorSheet {
     html.find('.item-rollToDyeButton').click(this._onRollToDye.bind(this));
     html.find('.item-rollToDoButton').click(this._onRollToDo.bind(this));
     html.find('.item-rollToRecoverButton').click(this._onRollToRecover.bind(this));
+    html.find('.item-setSwingButton').click(this._onSetSwing.bind(this));
+    html.find('.item-igniteButton').click(this._onIgnite.bind(this));
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
@@ -169,7 +171,90 @@ export class SentimentActorSheet extends ActorSheet {
   "rollToDye": "systems/sentiment/templates/chat/roll-to-dye-chat.html",
   "rollToRecover": "systems/sentiment/templates/chat/roll-to-recover-chat.html",
 }
+async _onIgnite(event) {
+  let actor = game.actors.get(this.actor._id);
+  let color;
 
+  //Get Locked Color
+  for (const element of actor.items) {
+    if(element.type==="color")
+    {
+      if(element.system.isSwing)
+      {
+        color = element;
+        element.update({'system.isSwing':false});
+      }
+    }
+  };
+
+  let message = "";
+  if(color)
+  {
+    message = "Ignited " + color.system.displayName;
+  }
+  else
+  {
+    message = "Cannot ignite. Not locked in to a color";
+  }
+  
+  ChatMessage.create({
+    user: game.user._id,
+    speaker: ChatMessage.getSpeaker(),
+    content: message
+    }
+  );
+}
+async _onSetSwing(event) {
+  let actor = game.actors.get(this.actor._id);
+  let colorArray = [];
+
+  
+
+  //Get Color Array
+  for (const element of actor.items) {
+    if(element.type==="color")
+    {
+      if(!(element.system.disabled || element.system.wounded || element.system.locked))
+      {
+        colorArray.push(element);
+      }
+    }
+  };
+
+  //Dialogue Options
+  let userInput = await SetSwingBonusDialogue(colorArray);
+  if(userInput.cancelled) {
+    return;
+  }
+  let swing = userInput.swing;
+  let selectedColorID = userInput.selectedColor;
+  
+  let color = actor.items.get(selectedColorID);
+  let colorName = "";
+  if (color) {
+    colorArray.forEach(element => {
+      if(element.system.isSwing && element.id != color.id)
+      {
+        element.update({'system.isSwing':false});
+      }
+    });
+    color.update({'system.isSwing':true,'system.swingValue':swing});
+    colorName = color.system.displayName;
+  }
+  else
+  {
+    system.log("Error: Color not found");
+    return;
+  }
+  
+  ChatMessage.create({
+    user: game.user._id,
+    speaker: ChatMessage.getSpeaker(),
+    content: `Set swing to ${colorName} [${swing}]`
+    }
+  );
+  return;
+}
 async _onRollToDye(event) {
   let actor = game.actors.get(this.actor._id);
   let colorArray = [];
@@ -691,6 +776,38 @@ async function GetRecoverBonusDialogue()
                 normal: {
                     label: "Roll",
                     callback: html => resolve(_processGetRecoverBonusDialogue(html[0].querySelector("form")))
+                },
+                cancel: {
+                    label: "Cancel",
+                    callback: html => resolve({cancelled:true})
+                }
+            },
+            default:"normal",
+            close: () => resolve({cancelled:true})
+        }
+
+        new Dialog(data,null).render(true);
+    });
+}
+function _processSetSwingDialogue(form) {
+  return {
+    swing: form.bonuses.value,
+    selectedColor: form.attribute.value
+  }
+}
+async function SetSwingBonusDialogue(colorArray)
+{
+    const template = "systems/sentiment/templates/chat/set-swing-dialogue.html";
+    const html = await renderTemplate(template, {colors:colorArray});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Set Swing",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Set",
+                    callback: html => resolve(_processSetSwingDialogue(html[0].querySelector("form")))
                 },
                 cancel: {
                     label: "Cancel",

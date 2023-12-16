@@ -67,6 +67,9 @@
   display: block;
   margin-right: 10px;
 }
+.rollButtons {
+  place-items: center;
+}
 .sheet-button {
   background-color: #c3c2aa;
   color: #333333;
@@ -76,9 +79,7 @@
   border-bottom: 1px solid #333333;
   border-left: 1px solid #CCCCCC;
   width: 125px;
-  display: inline-block;
-  position: relative;
-  top: 5px;
+  display: flex;
 }
 .colorblock-wide
 {
