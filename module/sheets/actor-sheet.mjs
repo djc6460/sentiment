@@ -264,7 +264,7 @@ async _onRollToDye(event) {
   let total = 0;
   let attVal = 0;
   let attColor = "";
-
+  let unlockedADie = false;
   //Dialogue Options
   let userInput = await GetDyeBonusDialogue();
   if(userInput.cancelled) {
@@ -303,6 +303,7 @@ async _onRollToDye(event) {
         //Unlock dice that get rolled as locked.
         let item = this.actor.items.get(element._id);
         item.update({'system.locked':false});
+        unlockedADie = true;
 
       }
       else
@@ -347,6 +348,7 @@ async _onRollToDye(event) {
     formulaString:formulaString,
     attColor: attColor,
     finalTotal: total,
+    unlockedADie: unlockedADie,
     finalTotalNoAtt: finalTotalNoAtt
   }
   let chatContent = await renderTemplate(this.chatTemplate["rollToDye"], cardData);
