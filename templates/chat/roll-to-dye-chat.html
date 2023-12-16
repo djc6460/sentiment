@@ -18,7 +18,8 @@
         <div>W</div>
     </div>
     {{/each}}
-    {{#if attVal}}<div class="colorattribute" style="color:{{attColor}}">+ {{attVal}}</div>{{/if}}
+    {{#if attVal}}<div class="colorattribute" style="color:{{attColor}}">+{{attVal}}</div>{{/if}}
+    {{#if formulaRoll.total}}<div class="colorattribute" title="{{formulaRoll.result}}" style="color:grey">{{formulaString}}</div>{{/if}}
     </div>
     <div class="rolltotal">{{finalTotal}}</div>
     <div class="smalltext">Click a color to set your swing.</div>

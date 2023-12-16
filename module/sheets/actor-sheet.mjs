@@ -179,6 +179,26 @@ async _onRollToDye(event) {
   let total = 0;
   let attVal = 0;
   let attColor = "";
+
+  //Dialogue Options
+  let userInput = await GetDyeBonusDialogue();
+  if(userInput.cancelled) {
+    return;
+  }
+  let bonuses = userInput.bonuses;
+
+  var formulaRoll;
+  try{
+    formulaRoll = await new Roll(bonuses).roll({async: true});
+    total+=formulaRoll.total;
+    colorRollArray.push(formulaRoll);
+  }
+  catch{
+    console.log("Bad value of " + formulaRoll + " was ignored")
+    colorRollArray = await new Roll("0").roll({async: true});
+    rollArray.push(formulaRoll);
+  }
+
   //One dice for every color
   for (const element of actor.items) {
     if(element.type==="color")
@@ -220,8 +240,14 @@ async _onRollToDye(event) {
       }
     }
   };
-  //Other bonuses come in here when i move to a dialogue trigger that passes them.
-  
+  var formulaString = "";
+  if(formulaRoll.total >= 0)
+  {
+    formulaString = "+"+formulaRoll.total;
+  } else {
+    formulaString = "-"+formulaRoll.total;
+  }
+
   let ownerID = this.actor.id;
   let finalTotalNoAtt = total-attVal;
   let cardData = {
@@ -230,6 +256,8 @@ async _onRollToDye(event) {
     colorLockArray: colorLockArray,
     ownerId: ownerID,
     attVal: attVal,
+    formulaRoll:formulaRoll,
+    formulaString:formulaString,
     attColor: attColor,
     finalTotal: total,
     finalTotalNoAtt: finalTotalNoAtt
@@ -237,6 +265,8 @@ async _onRollToDye(event) {
   let chatContent = await renderTemplate(this.chatTemplate["rollToDye"], cardData);
   
   
+  colorRollArray = cleanseDice(colorRollArray);
+
   ChatMessage.create({
     user: game.user._id,
     speaker: ChatMessage.getSpeaker(),
@@ -256,6 +286,26 @@ async _onRollToRecover(event) {
   let total = 0;
   let attVal = 0;
   let attColor = "";
+  
+  //Dialogue Options
+  let userInput = await GetRecoverBonusDialogue();
+  if(userInput.cancelled) {
+    return;
+  }
+  let bonuses = userInput.bonuses;
+
+  var formulaRoll;
+  try{
+    formulaRoll = await new Roll(bonuses).roll({async: true});
+    total+=formulaRoll.total;
+    colorRollArray.push(formulaRoll);
+  }
+  catch{
+    console.log("Bad value of " + formulaRoll + " was ignored")
+    colorRollArray = await new Roll("0").roll({async: true});
+    rollArray.push(formulaRoll);
+  }
+
   //One dice for every color
   for (const element of actor.items) {
     if(element.type==="color")
@@ -282,19 +332,30 @@ async _onRollToRecover(event) {
       }
     }
   };
-  //Other bonuses come in here when i move to a dialogue trigger that passes them.
+  
+  
+  var formulaString = "";
+  if(formulaRoll.total >= 0)
+  {
+    formulaString = "+"+formulaRoll.total;
+  } else {
+    formulaString = "-"+formulaRoll.total;
+  }
   
   let ownerID = this.actor.id;
   let cardData = {
     colorArray: colorArray,
     colorWoundArray: colorWoundArray,
     ownerId: ownerID,
+    formulaRoll:formulaRoll,
+    formulaString:formulaString,
     attVal: attVal,
     attColor: attColor,
     finalTotal: total,
   }
   let chatContent = await renderTemplate(this.chatTemplate["rollToRecover"], cardData);
   
+  colorRollArray = cleanseDice(colorRollArray);
   
   ChatMessage.create({
     user: game.user._id,
@@ -315,6 +376,25 @@ async _onRollToDo(event) {
   let total = 0;
   let attVal = 0;
   let attColor = "";
+  let rollArray = [];
+  //Dialogue Options
+  let userInput = await GetDoBonusDialogue();
+  if(userInput.cancelled) {
+    return;
+  }
+  let bonuses = userInput.bonuses;
+
+  var formulaRoll;
+  try{
+    formulaRoll = await new Roll(bonuses).roll({async: true});
+    total+=formulaRoll.total;
+    rollArray.push(formulaRoll);
+  }
+  catch{
+    console.log("Bad value of " + formulaRoll + " was ignored")
+    formulaRoll = await new Roll("0").roll({async: true});
+    rollArray.push(formulaRoll);
+  }
   //Find the swing
   for (const element of context.colors) {
     if(element.system.isSwing) {
@@ -325,8 +405,8 @@ async _onRollToDo(event) {
       color = element;
     }
   }
-
-  let d20Roll = await new Roll("1d20").roll({async: true});
+  
+  var d20Roll = await new Roll("1d20").roll({async: true});
   //There was no swing so roll wild
   if(!colorRoll){
     colorRoll = await new Roll("1d6").roll({async: true});
@@ -338,9 +418,18 @@ async _onRollToDo(event) {
     attColor = '#d3d3d3';
   }
   total+=colorRoll.total + d20Roll.total;
-  //Other bonuses come in here when i move to a dialogue trigger that passes them.
+  rollArray.push(d20Roll);
+  rollArray.push(colorRoll);
   
   let ownerID = this.actor.id;
+
+  var formulaString = "";
+  if(formulaRoll.total >= 0)
+  {
+    formulaString = "+"+formulaRoll.total;
+  } else {
+    formulaString = "-"+formulaRoll.total;
+  }
 
   let cardData = {
     color: color,
@@ -348,22 +437,29 @@ async _onRollToDo(event) {
     d20Roll: d20Roll,
     ownerId: ownerID,
     attVal: attVal,
+    formulaRoll:formulaRoll,
+    formulaString:formulaString,
     attColor: attColor,
     finalTotal: total,
   }
   let chatContent = await renderTemplate(this.chatTemplate["rollToDo"], cardData);
   
+
+  //Dice so nice cleanser
+  rollArray = cleanseDice(rollArray);
+  
   ChatMessage.create({
     user: game.user._id,
     speaker: ChatMessage.getSpeaker(),
     content: chatContent,
-    rolls: [colorRoll, d20Roll], //passing this for dice so nice.
+    rolls: rollArray, //passing this for dice so nice.
     sound: CONFIG.sounds.dice,
     type: CONST.CHAT_MESSAGE_TYPES.ROLL,
     }
   );
   return;
 }
+
   /**
    * Toggle the lock status on an item
    * @param {Event} event   The originating click event
@@ -381,6 +477,7 @@ async _onRollToDo(event) {
       item.update({'system.locked':item.system.locked});
     }
   }
+
   async _onTogglePrimary(event) {
     
     const element = event.currentTarget;
@@ -395,7 +492,9 @@ async _onRollToDo(event) {
       }
       item.update({'system.isEquipped':item.system.isEquipped, 'system.isPrimary':item.system.isPrimary});
     }
-  }async _onRemoveSwing(event) {
+  }
+  
+  async _onRemoveSwing(event) {
     
     const element = event.currentTarget;
     //const dataset = element.dataset;
@@ -511,4 +610,115 @@ async _onRollToDo(event) {
     }
   }
 
+}
+function _processGetDoBonusDialogue(form) {
+  return {
+      bonuses: form.bonuses.value
+  }
+}
+async function GetDoBonusDialogue()
+{
+    const template = "systems/sentiment/templates/chat/roll-to-do-dialogue.html";
+    const html = await renderTemplate(template, {});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Roll to Do",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Roll",
+                    callback: html => resolve(_processGetDoBonusDialogue(html[0].querySelector("form")))
+                },
+                cancel: {
+                    label: "Cancel",
+                    callback: html => resolve({cancelled:true})
+                }
+            },
+            default:"normal",
+            close: () => resolve({cancelled:true})
+        }
+
+        new Dialog(data,null).render(true);
+    });
+}
+function _processGetDyeBonusDialogue(form) {
+  return {
+      bonuses: form.bonuses.value
+  }
+}
+async function GetDyeBonusDialogue()
+{
+    const template = "systems/sentiment/templates/chat/roll-to-dye-dialogue.html";
+    const html = await renderTemplate(template, {});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Roll to Do",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Roll",
+                    callback: html => resolve(_processGetDyeBonusDialogue(html[0].querySelector("form")))
+                },
+                cancel: {
+                    label: "Cancel",
+                    callback: html => resolve({cancelled:true})
+                }
+            },
+            default:"normal",
+            close: () => resolve({cancelled:true})
+        }
+
+        new Dialog(data,null).render(true);
+    });
+}
+function _processGetRecoverBonusDialogue(form) {
+  return {
+      bonuses: form.bonuses.value
+  }
+}
+async function GetRecoverBonusDialogue()
+{
+    const template = "systems/sentiment/templates/chat/roll-to-recover-dialogue.html";
+    const html = await renderTemplate(template, {});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Roll to Recover",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Roll",
+                    callback: html => resolve(_processGetRecoverBonusDialogue(html[0].querySelector("form")))
+                },
+                cancel: {
+                    label: "Cancel",
+                    callback: html => resolve({cancelled:true})
+                }
+            },
+            default:"normal",
+            close: () => resolve({cancelled:true})
+        }
+
+        new Dialog(data,null).render(true);
+    });
+}
+
+//Removes all rolls with no result values. Dice so nice fails if it's passed a roll with no dice results.
+function cleanseDice(rollArray)
+{
+var diceSoNiceArray = [];
+  rollArray.forEach(roll => {
+    let shouldAdd = false;
+    roll.dice.forEach(dice => {
+      if(dice.results)
+      {shouldAdd = true}
+
+    });
+    if(shouldAdd){
+      diceSoNiceArray.push(roll);
+    }
+  });
+  return diceSoNiceArray;
 }
