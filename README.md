@@ -7,4 +7,6 @@ This system is for the in development ttrpg sentiment. It is currently bare bone
 
 Add a button for "Set Swing"  
 
+Allow custom dice sizes for colors.  
+
 Add/Steal a status system to put icons over tokens.    
