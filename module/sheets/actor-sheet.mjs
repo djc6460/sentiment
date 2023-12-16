@@ -182,7 +182,7 @@ async _onIgnite(event) {
       if(element.system.isSwing)
       {
         color = element;
-        element.update({'system.isSwing':false});
+        element.update({'system.isSwing':false, 'system.locked':true});
       }
     }
   };
@@ -190,7 +190,7 @@ async _onIgnite(event) {
   let message = "";
   if(color)
   {
-    message = "Ignited " + color.system.displayName;
+    message = "Ignited " + color.system.displayName +". It is now locked out.";
   }
   else
   {
