@@ -54,6 +54,12 @@
     {{!-- Summary Tab --}}
     {{!-- Color Display--}}
     <div class="tab summary" data-group="primary" data-tab="summary">
+      <li class="item flexrow items-header">
+        <div class="item-name">Attributes</div>
+        <div class="item-controls">
+          <a class="item-control item-create item-color-create" title="Create attribute" data-type="color"><i class="fas fa-plus"></i> Create attribute</a>
+        </div>
+      </li>
       <div class="abilities flexcol">
         {{#each colors as |color key|}}
           <div class="item flexrow flex-group-center {{#if system.disabled}}disabled{{/if}} {{#unless color.system.expanded}}color-row{{/unless}}" data-item-id="{{color._id}}">

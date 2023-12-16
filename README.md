@@ -13,10 +13,11 @@ Add speed attribute (done)
 Fix broken swing lock message (done)  
 
 # Normal  
-Add create color button on character sheet.  
+Add create color button on character sheet. (done)
 Add a button for "Set Swing"  
 Add button for ignite.  
 Actually make a real readme  
+Add settings page to disable automated messaging (wound/lock and such) or send them to self instead.
   
 Add popups for all rolls to add bonus dice and modifiers. (done)  
 Create Compendium for basic colors (done)  

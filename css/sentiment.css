@@ -62,6 +62,11 @@
   left: 28px;
   top: -27px;
 }
+.item-color-create {
+  text-align: right;
+  display: block;
+  margin-right: 10px;
+}
 .sheet-button {
   background-color: #c3c2aa;
   color: #333333;
