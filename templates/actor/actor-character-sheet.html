@@ -60,7 +60,7 @@
           <a class="item-control item-create item-color-create" title="Create attribute" data-type="color"><i class="fas fa-plus"></i> Create attribute</a>
         </div>
       </li>
-      <div class="abilities flexcol">
+      <li class="abilities flexcol">
         {{#each colors as |color key|}}
           <div class="item flexrow flex-group-center {{#if system.disabled}}disabled{{/if}} {{#unless color.system.expanded}}color-row{{/unless}}" data-item-id="{{color._id}}">
             <div class="colorblock-small" style="background-color: {{color.system.hexColor}};"><div>{{color.system.value}}</div>{{#if color.system.isSwing}}<a class = "item-remove-swing"><div class="colorblock-small block-swing floatingSwing"><div>{{color.system.swingValue}}</div></div></a>{{/if}}</div>
@@ -76,9 +76,8 @@
             </a></div>
             {{#if color.system.locked}}</em>{{/if}}
             {{#if color.system.wounded}}</s>{{/if}}
-            <div class="item-controls gift-controls">
 
-              
+            <div class="item-controls color-controls">
               {{#if color.system.wounded}}
               <a class="item-control item-toggle-wound" title="Heal"><i class="fas fa-suitcase-medical"></i></a>
               {{else}}
@@ -99,14 +98,14 @@
           </div>
           {{/if}}
         {{/each}}
-      </div>
-      <div class="rollButtons grid grid-3col">
+      </li>
+      <li class="rollButtons grid grid-3col">
         <a class="item-rollToDyeButton flex-group-center sheet-button">Roll to Dye</a>
         <a class="item-rollToDoButton flex-group-center sheet-button">Roll to Do</a>
         <a class="item-rollToRecoverButton flex-group-center sheet-button">Roll to Recover</a>
         <a class="item-setSwingButton flex-group-center sheet-button">Set Swing</a>
         <a class="item-igniteButton flex-group-center sheet-button">Ignite</a>
-      </div>
+      </li>
     </div>
     {{!-- Owned Items Tab --}}
     <div class="tab gifts" data-group="primary" data-tab="gifts">

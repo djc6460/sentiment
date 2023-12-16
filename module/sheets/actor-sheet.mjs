@@ -316,7 +316,9 @@ async _onRollToDye(event) {
           attVal = parseInt(element.system.value);
           attColor = element.system.hexColor;
         } else {
-          roll = await new Roll("1d6").roll({async: true});
+          let dice = "1d6";
+          if(element.system.diceSize)dice = element.system.diceSize;
+          roll = await new Roll(dice).roll({async: true});
         }
         obj.roll = roll;
         total+=roll.total;
@@ -409,7 +411,9 @@ async _onRollToRecover(event) {
         obj.colorItem = element;
         total+= parseInt(element.system.value);
         attVal+= parseInt(element.system.value);
-        var  roll = await new Roll("1d6").roll({async: true});
+        let dice = "1d6";
+        if(element.system.diceSize)dice = element.system.diceSize;
+        var roll = await new Roll(dice).roll({async: true});
         obj.roll = roll;
         total+=roll.total;
         colorArray.push(obj);
@@ -561,6 +565,21 @@ async _onRollToDo(event) {
       item.system.locked = !item.system.locked;
       item.update({'system.locked':item.system.locked});
     }
+    let message = '';
+    if(item.system.locked)
+    {
+      message = "Locked out " + item.system.displayName;
+    }
+    else
+    {
+      message = "Unlocked " + item.system.displayName;
+    }
+    ChatMessage.create({
+      user: game.user._id,
+      speaker: ChatMessage.getSpeaker(),
+      content: message
+      }
+    );
   }
 
   async _onTogglePrimary(event) {
@@ -589,6 +608,12 @@ async _onRollToDo(event) {
     if (item) {
       item.update({'system.isSwing':false});
     }
+    ChatMessage.create({
+      user: game.user._id,
+      speaker: ChatMessage.getSpeaker(),
+      content: "Swing Dropped"
+      }
+    );
   }
   async _onToggleEquipped(event) {
     
@@ -635,6 +660,21 @@ async _onRollToDo(event) {
       item.system.wounded = !item.system.wounded;
       item.update({'system.wounded':item.system.wounded});
     }
+    let message = '';
+    if(item.system.wounded)
+    {
+      message = "Wounded " + item.system.displayName;
+    }
+    else
+    {
+      message = "Healed " + item.system.displayName;
+    }
+    ChatMessage.create({
+      user: game.user._id,
+      speaker: ChatMessage.getSpeaker(),
+      content: message
+      }
+    );
   }
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
