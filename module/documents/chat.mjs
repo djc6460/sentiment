@@ -23,13 +23,13 @@ function onSelectSwing(event)
     color.update({'system.isSwing':true,'system.swingValue':rollVal});
 
     let chatContent = "Locked in to " + color.system.displayName;
-    if(card.dataset.isRecover)
+    if(card.dataset.isrecover)
     {
-        chatContent+= ". Total is now " + (parseInt(total) + parseInt(color.system.value)) + ".";
+        chatContent+= ".";
     }
     else
     {
-        chatContent+= ".";
+        chatContent+= " [+"+parseInt(color.system.value)+"]. Total is now " + (parseInt(total) + parseInt(color.system.value)) + ".";
     }
     ChatMessage.create({
         user: game.user._id,

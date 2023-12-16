@@ -12,8 +12,8 @@
   "media": [
     {
       "type": "setup",
-      "url": "systems/sentiment/assets/anvil-impact.png",
-      "thumbnail": "systems/sentiment/assets/anvil-impact.png"
+      "url": "systems/sentiment/assets/anvil-bg-sentiment.png",
+      "thumbnail": "systems/sentiment/assets/anvil-bg-sentiment.png"
     }
   ],
   "version": "1.0.1",
@@ -30,12 +30,22 @@
       "path": "lang/en.json"
     }
   ],
-  "packs": [],
+  "packs": [
+    {
+      "name": "colors",
+      "label": "Standard Colors",
+      "system":"sentiment",
+      "type": "Item",
+      "path": "packs/standard-colors.db",
+      "private": false,
+      "flags":{}
+    }
+  ],
   "packFolders": [],
   "socket": false,
   "manifest": "https://raw.githubusercontent.com/djc6460/sentiment/master/system.json",
   "download": "https://github.com/djc6460/sentiment/releases/download/release-1.0.2/sentiment-release-1.0.2.zip",
-  "background": "systems/sentiment/assets/anvil-impact.png",
+  "background": "systems/sentiment/assets/anvil-bg-sentiment.png",
   "url":"https://github.com/djc6460/sentiment",
   "gridDistance": 5,
   "gridUnits": "ft",
