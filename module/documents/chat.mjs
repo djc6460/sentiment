@@ -6,7 +6,17 @@ export function addChatListeners(html)
 function onSelectSwing(event)
 {
     const card = event.currentTarget;
-    let actor = game.actors.get(card.dataset.ownerId);
+    let actor;
+    if(card.dataset.tokenId != "")
+    {
+        //This gets an instanced actor via token. (for npcs)
+        actor = canvas.tokens.get(card.dataset.tokenId).actor;
+    }
+    else
+    {
+        //This get the actor document via id.
+        actor = game.actors.get(card.dataset.ownerId);
+    }
     let color = actor.items.get(card.dataset.itemId);
     let total = card.dataset.rolltotal;
     let rollVal = card.dataset.rollval;

@@ -172,7 +172,7 @@ export class SentimentActorSheet extends ActorSheet {
   "rollToRecover": "systems/sentiment/templates/chat/roll-to-recover-chat.html",
 }
 async _onIgnite(event) {
-  let actor = game.actors.get(this.actor._id);
+  let actor = this.actor;
   let color;
 
   //Get Locked Color
@@ -205,10 +205,8 @@ async _onIgnite(event) {
   );
 }
 async _onSetSwing(event) {
-  let actor = game.actors.get(this.actor._id);
+  let actor = this.actor;
   let colorArray = [];
-
-  
 
   //Get Color Array
   for (const element of actor.items) {
@@ -256,7 +254,7 @@ async _onSetSwing(event) {
   return;
 }
 async _onRollToDye(event) {
-  let actor = game.actors.get(this.actor._id);
+  let actor = this.actor;
   let colorArray = [];
   let colorWoundArray = [];
   let colorLockArray = [];
@@ -336,13 +334,21 @@ async _onRollToDye(event) {
     formulaString = "-"+formulaRoll.total;
   }
 
-  let ownerID = this.actor.id;
+  //For npcs which can have multiple sheets, if this is a token sheet grab the token id so we can use that instead of actor id.
+  let tokenId = "";
+  if(actor.isToken)
+  {
+    tokenId = actor.token.id;
+  }
+
+  let ownerID = actor.id;
   let finalTotalNoAtt = total-attVal;
   let cardData = {
     colorArray: colorArray,
     colorWoundArray: colorWoundArray,
     colorLockArray: colorLockArray,
     ownerId: ownerID,
+    tokenId: tokenId,
     attVal: attVal,
     formulaRoll:formulaRoll,
     formulaString:formulaString,
@@ -368,7 +374,7 @@ async _onRollToDye(event) {
   return;
 }
 async _onRollToRecover(event) {
-  let actor = game.actors.get(this.actor._id);
+  let actor = this.actor;
   let colorArray = [];
   let colorWoundArray = [];
   let colorRollArray = [];
@@ -433,11 +439,18 @@ async _onRollToRecover(event) {
     formulaString = "-"+formulaRoll.total;
   }
   
+  let tokenId = "";
+  if(actor.isToken)
+  {
+    tokenId = actor.token.id;
+  }
+
   let ownerID = this.actor.id;
   let cardData = {
     colorArray: colorArray,
     colorWoundArray: colorWoundArray,
     ownerId: ownerID,
+    tokenId: tokenId,
     formulaRoll:formulaRoll,
     formulaString:formulaString,
     attVal: attVal,

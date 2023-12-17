@@ -4,9 +4,6 @@ This system is for the in development ttrpg sentiment. It is currently bare bone
 
 ## Current todo list
 # Trivial  
-Added a message for when a roll to dye automatically unlocks dice. x  
-Igniting a dice now locks it out. x  
-Adjusted compendium colors to be softer
   
 # Normal  
 Actually make a real readme  
@@ -14,4 +11,6 @@ Add settings page to disable automated messaging (wound/lock and such) or send t
 
 # Full brainpower  
 Add/Steal a status system to put icons over tokens.  
+Add a token image management system that supports automatic overlays when locking in a swing, add a token image tab to the sheet for one click changes as well.
 Clean up all the unused code from boilerplate, and organize the mess.  
+Create a base implimented automatic/manual token image swapper.
