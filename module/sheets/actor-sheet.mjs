@@ -736,6 +736,20 @@ async _onRollToDo(event) {
         if (item) return item.roll();
       }
     }
+    if (dataset.rollType) {
+      if (dataset.rollType == 'gift') {
+        const itemId = element.closest('.item').dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (item) return item.roll();
+      }
+    }
+    if (dataset.rollType) {
+      if (dataset.rollType == 'color') {
+        const itemId = element.closest('.item').dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (item) return item.roll();
+      }
+    }
 
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {

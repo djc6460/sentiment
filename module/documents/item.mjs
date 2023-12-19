@@ -39,7 +39,21 @@ export class SentimentItem extends Item {
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
     const rollMode = game.settings.get('core', 'rollMode');
-    const label = `[${item.type}] ${item.name}`;
+    let label = `[${item.type}] ${item.name}`;
+    let content = item.system.description ?? ''
+    if(item.type == 'gift')
+    {
+        if(item.system.isPrimary)
+        {
+          label += ` {Primary}`;
+          content = item.system.primaryDescription+'\n\n'+ content;
+        }
+    }
+    //replace this with a color square template in the future
+    if(item.type == 'color')
+    {
+      label = `[${item.type}] ${item.system.displayName} (${item.system.value})`;
+    }
 
     // If there's no roll data, send a chat message.
     if (!this.system.formula) {
@@ -47,7 +61,7 @@ export class SentimentItem extends Item {
         speaker: speaker,
         rollMode: rollMode,
         flavor: label,
-        content: item.system.description ?? ''
+        content: content
       });
     }
     // Otherwise, create a roll and send a chat message from it.
