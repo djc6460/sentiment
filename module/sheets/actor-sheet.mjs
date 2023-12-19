@@ -271,16 +271,9 @@ async _onRollToDye(event) {
   let bonuses = userInput.bonuses;
 
   var formulaRoll;
-  try{
-    formulaRoll = await new Roll(bonuses).roll({async: true});
-    total+=formulaRoll.total;
-    colorRollArray.push(formulaRoll);
-  }
-  catch{
-    console.log("Bad value of " + formulaRoll + " was ignored")
-    colorRollArray = await new Roll("0").roll({async: true});
-    rollArray.push(formulaRoll);
-  }
+  formulaRoll = await CreateRollFromUserString(bonuses, "0");
+  total+=formulaRoll.total;
+  colorRollArray.push(formulaRoll);
 
   //One dice for every color
   for (const element of actor.items) {
@@ -310,14 +303,12 @@ async _onRollToDye(event) {
         obj.colorItem = element;
         var roll;
         if(element.system.isSwing) {
-          roll = await new Roll(element.system.swingValue).roll({async: true});
+          roll = await CreateRollFromUserString(element.system.swingValue, "0");
           total+=parseInt(element.system.value);
           attVal = parseInt(element.system.value);
           attColor = element.system.hexColor;
         } else {
-          let dice = "1d6";
-          if(element.system.diceSize)dice = element.system.diceSize;
-          roll = await new Roll(dice).roll({async: true});
+          roll = await CreateRollFromUserString(element.system.diceSize, "1d6");
         }
         obj.roll = roll;
         total+=roll.total;
@@ -390,16 +381,9 @@ async _onRollToRecover(event) {
   let bonuses = userInput.bonuses;
 
   var formulaRoll;
-  try{
-    formulaRoll = await new Roll(bonuses).roll({async: true});
-    total+=formulaRoll.total;
-    colorRollArray.push(formulaRoll);
-  }
-  catch{
-    console.log("Bad value of " + formulaRoll + " was ignored")
-    colorRollArray = await new Roll("0").roll({async: true});
-    rollArray.push(formulaRoll);
-  }
+  formulaRoll = await CreateRollFromUserString(bonuses, "0");
+  total+=formulaRoll.total;
+  colorRollArray.push(formulaRoll);
 
   //One dice for every color
   for (const element of actor.items) {
@@ -419,9 +403,7 @@ async _onRollToRecover(event) {
         obj.colorItem = element;
         total+= parseInt(element.system.value);
         attVal+= parseInt(element.system.value);
-        let dice = "1d6";
-        if(element.system.diceSize)dice = element.system.diceSize;
-        var roll = await new Roll(dice).roll({async: true});
+        var roll = await CreateRollFromUserString(element.system.diceSize, "1d6");
         obj.roll = roll;
         total+=roll.total;
         colorArray.push(obj);
@@ -474,56 +456,73 @@ async _onRollToRecover(event) {
 }
 
 async _onRollToDo(event) {
-  const context = this.getData();
-  let color;
+  let actor = this.actor;
   let colorRoll;
   let total = 0;
   let attVal = 0;
   let attColor = "";
   let rollArray = [];
+  let colorArray = [];
+  //Get Color Array
+  for (const element of actor.items) {
+    if(element.type==="color")
+    {
+      if(!(element.system.disabled || element.system.wounded))
+      {
+        colorArray.push(element);
+      }
+    }
+  };
+
   //Dialogue Options
-  let userInput = await GetDoBonusDialogue();
+  let userInput = await GetDoBonusDialogue(colorArray);
   if(userInput.cancelled) {
     return;
   }
   let bonuses = userInput.bonuses;
+  let selectedColorID = userInput.selectedColor;
 
   var formulaRoll;
-  try{
-    formulaRoll = await new Roll(bonuses).roll({async: true});
-    total+=formulaRoll.total;
-    rollArray.push(formulaRoll);
-  }
-  catch{
-    console.log("Bad value of " + formulaRoll + " was ignored")
-    formulaRoll = await new Roll("0").roll({async: true});
-    rollArray.push(formulaRoll);
-  }
-  //Find the swing
-  for (const element of context.colors) {
-    if(element.system.isSwing) {
-      colorRoll = await new Roll(element.system.swingValue).roll({async: true});
-      total+=parseInt(element.system.value);
-      attVal = parseInt(element.system.value);
-      attColor = element.system.hexColor;
-      color = element;
-    }
-  }
-  
-  var d20Roll = await new Roll("1d20").roll({async: true});
-  //There was no swing so roll wild
-  if(!colorRoll){
+  formulaRoll = await CreateRollFromUserString(bonuses, "0")
+  total+=formulaRoll.total;
+  rollArray.push(formulaRoll);
+
+  //Get color info
+  let color;
+  if(selectedColorID == "wild")
+  {
+    //Roll wild option
     colorRoll = await new Roll("1d6").roll({async: true});
-    //create a fake color
+
+    //create a fake color for the chat message
     color = {};
     color.system = {}
     color.system.isSwing = false;
     color.system.displayName = 'Wild';
     attColor = '#d3d3d3';
   }
+  else
+  {
+    color = actor.items.get(selectedColorID);
+    //If this is the swing, set the swing die.
+    if(color.system.isSwing) {
+      colorRoll = await CreateRollFromUserString(color.system.swingValue, "0");
+    }
+    else
+    {
+      //Not the swing so we roll the color's die instead
+      colorRoll = await CreateRollFromUserString(color.system.diceSize, "1d6");
+    }
+    total+=parseInt(color.system.value);
+    attVal = parseInt(color.system.value);
+    attColor = color.system.hexColor;
+  }
+  rollArray.push(colorRoll);
+  
+  var d20Roll = await new Roll("1d20").roll({async: true});
+  
   total+=colorRoll.total + d20Roll.total;
   rollArray.push(d20Roll);
-  rollArray.push(colorRoll);
   
   let ownerID = this.actor.id;
 
@@ -767,13 +766,14 @@ async _onRollToDo(event) {
 }
 function _processGetDoBonusDialogue(form) {
   return {
-      bonuses: form.bonuses.value
+      bonuses: form.bonuses.value,
+      selectedColor: form.attribute.value
   }
 }
-async function GetDoBonusDialogue()
+async function GetDoBonusDialogue(colorArray)
 {
     const template = "systems/sentiment/templates/chat/roll-to-do-dialogue.html";
-    const html = await renderTemplate(template, {});
+    const html = await renderTemplate(template, {colors:colorArray});
 
     return new Promise(resolve => {
         const data = {
@@ -907,4 +907,28 @@ var diceSoNiceArray = [];
     }
   });
   return diceSoNiceArray;
+}
+
+//User can give us bad roll data so we return either the roll or a fake roll for a bad string
+async function CreateRollFromUserString(userDiceString, defaultDiceString)
+{
+  let roll;
+  try{
+    roll = await new Roll(userDiceString).roll({async: true});
+  }
+  catch{
+    console.log("Bad value of " + roll + " was ignored");
+
+    //If we are given a default, roll that instead (for empty strings from migrations)
+    if(defaultDiceString)
+    {
+      userDiceString = defaultDiceString;
+    }
+    else
+    {
+      userDiceString = '0';
+    }
+    roll = await new Roll(userDiceString).roll({async: true});
+  }
+  return roll;
 }
