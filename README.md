@@ -2,6 +2,17 @@
 
 This system is for the in development ttrpg sentiment. It is currently bare bones but usable.
 
+## Recommended Modules  
+All of these are searchable  
+  
+# 'Essential' for Sentiment:
+Bar Brawl - Allows you to make custom bars and variables for tokens.  
+Token HUD Wildcard - Essential for easy swapping of token faces (If you like having borders match your attributes)  
+Condition Lab and Triggler - Primarily for condition lab, allows you to make custom conditions and icons for them (For various gift buffs)  
+  
+# Generally Useful for any System:  
+PopOut!, Drag Upload, Drag Ruler, Dice so Nice, Dice Tray, Quick Insert  
+
 ## Current todo list
 # Trivial  
   
