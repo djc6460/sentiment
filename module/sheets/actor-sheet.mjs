@@ -80,13 +80,14 @@ export class SentimentActorSheet extends ActorSheet {
     // Initialize containers.
     const gifts = [];
     const colors = [];
-
+    context.system.xpToLevelHP = Math.floor((context.system.health.max) / 10) + 2;
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
       // Append to color
       if (i.type === 'color') {
         colors.push(i);
+        i.system.xpToLevel = (i.system.value + 1) * 10;
       }
       // Append to gift.
       else if (i.type === 'gift') {
@@ -128,6 +129,8 @@ export class SentimentActorSheet extends ActorSheet {
     html.find('.item-toggle-equip').click(this._onToggleEquipped.bind(this));
     
     html.find('.item-toggle-primary').click(this._onTogglePrimary.bind(this));
+    html.find('.item-spendxp').click(this._onSpendXp.bind(this));
+    html.find('.item-spendxponhp').click(this._onSpendXpOnHP.bind(this));
     html.find('.item-remove-swing').click(this._onRemoveSwing.bind(this));
 
     //Toggle item expansion
@@ -572,6 +575,36 @@ async _onRollToDo(event) {
   return;
 }
 
+  /**
+   * Spend xp on an item
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onSpendXp(event) {
+    const element = event.currentTarget;
+    const itemId = element.closest('.item').dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    let currentXP = this.actor.system.attributes.experience.value;
+    let neededXP = (item.system.value + 1) * 10;
+
+    if(currentXP >= neededXP)
+    {
+      currentXP -= neededXP;
+      item.update({'system.value':item.system.value+1});
+      this.actor.update({'system.attributes.experience.value':currentXP});
+    }
+  }
+  async _onSpendXpOnHP(event) {
+    let currentXP = this.actor.system.attributes.experience.value;
+    let neededXP = Math.floor((this.actor.system.health.max) / 10) + 2;;
+    
+    if(currentXP >= neededXP)
+    {
+      currentXP -= neededXP;
+      this.actor.update({'system.attributes.experience.value':currentXP, "system.health.max":this.actor.system.health.max+1,  "system.health.value":this.actor.system.health.value+1});
+    }
+  }
   /**
    * Toggle the lock status on an item
    * @param {Event} event   The originating click event

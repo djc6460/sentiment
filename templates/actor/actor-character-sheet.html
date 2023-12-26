@@ -19,7 +19,7 @@
           <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
           <span> / </span>
           <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
-          </div>
+          </div>{{#if system.showLeveling}}<a class="item-spendxponhp" title="Increase HP by 1"><i class="fas fa-up"></i> (XP: {{system.xpToLevelHP}})</a>{{/if}}
         </div>
 
         <div class="resource flex-group-center">
@@ -46,6 +46,7 @@
     <a class="item" data-tab="summary">Summary</a>
     <a class="item" data-tab="gifts">Gifts</a>
     <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="settings">Settings</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -76,6 +77,7 @@
             {{#if color.system.wounded}}</s>{{/if}}
 
             <div class="item-controls color-controls">
+              {{#if ../system.showLeveling}}<a class="item-spendxp" title="Increase Stat by 1"><i class="fas fa-up"></i> (XP: {{color.system.xpToLevel}})</a> {{/if}}
               {{#if color.system.wounded}}
               <a class="item-control item-toggle-wound" title="Heal"><i class="fas fa-suitcase-medical"></i></a>
               {{else}}
@@ -115,6 +117,13 @@
       {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actors roll data to the rollData property. --}}
       {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
     </div>
+
+    {{!-- Settings Tab --}}
+    <div class="tab settings" data-group="primary" data-tab="settings">
+      <input type="checkbox" name="system.showLeveling" {{checked system.showLeveling}}>
+      <label><b style="position: relative;top: -4px;">Show Leveling</b></label><br>
+    </div>
+    
 
 
     </div>

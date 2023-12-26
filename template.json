@@ -9,7 +9,8 @@
           "max": 10
         },
         "biography": "",
-        "currentSwingName":""
+        "currentSwingName":"",
+        "showLeveling":false
       }
     },
     "character": {
