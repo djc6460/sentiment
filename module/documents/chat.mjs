@@ -31,7 +31,14 @@ function onSelectSwing(event)
         }
     }
     color.update({'system.isSwing':true,'system.swingValue':rollVal});
-
+    if(color.system.internalName)
+    {
+        actor.update({'system.currentSwingName':color.system.internalName});
+    }
+    else
+    {
+        actor.update({'system.currentSwingName':color.name});
+    }
     let chatContent = "Locked in to " + color.system.displayName;
     if(card.dataset.isrecover)
     {

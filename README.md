@@ -7,7 +7,7 @@ All of these are searchable
   
 # 'Essential' for Sentiment:
 Bar Brawl - Allows you to make custom bars and variables for tokens.  
-Token HUD Wildcard - Essential for easy swapping of token faces (If you like having borders match your attributes)  
+Token Variant Art - Essential for easy swapping of token faces (If you like having borders match your attributes)  
 Condition Lab and Triggler - Primarily for condition lab, allows you to make custom conditions and icons for them (For various gift buffs)  
   
 # Generally Useful for any System:  

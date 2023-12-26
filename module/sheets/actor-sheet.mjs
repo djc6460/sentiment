@@ -183,6 +183,7 @@ async _onIgnite(event) {
       {
         color = element;
         element.update({'system.isSwing':false, 'system.locked':true});
+        actor.update({'system.currentSwingName':"none"});
       }
     }
   };
@@ -237,6 +238,14 @@ async _onSetSwing(event) {
       }
     });
     color.update({'system.isSwing':true,'system.swingValue':swing});
+    if(color.system.internalName != "")
+    {
+        actor.update({'system.currentSwingName':color.system.internalName});
+    }
+    else
+    {
+        actor.update({'system.currentSwingName':color.name});
+    }
     colorName = color.system.displayName;
   }
   else
@@ -621,6 +630,7 @@ async _onRollToDo(event) {
     const item = this.actor.items.get(itemId);
     if (item) {
       item.update({'system.isSwing':false});
+      this.actor.update({'system.currentSwingName':"none"});
     }
     ChatMessage.create({
       user: game.user._id,
