@@ -12,7 +12,28 @@ Condition Lab and Triggler - Primarily for condition lab, allows you to make cus
   
 # Generally Useful for any System:  
 PopOut!, Drag Upload, Drag Ruler, Dice so Nice, Dice Tray, Quick Insert  
-
+  
+# Token Variant Art Support  
+There are special fields to use with Token Variant Art to make automatic swapping of borders when you lock in a color.    
+Use the following as an expression: actor.system.currentSwingName="blue"    
+You replace blue with the attribute's name (case sensitive), or you can override a color's currentSwingName name by changing the color's "internal name" value.  
+(Todo, create and link a config here for global borders)  
+  
+(Todo: Image Guide)  
+To get to a token's settings for this:  
+1) Click the token  
+2) Right Click the TVA button (should be bottom right icon)  
+3) Select "Mappings"  
+4) From here, in the top bar you can select global to make global overlays for all tokens if you want.  
+5) Click the little plus for a new mapping.  
+6) Paste the above expression in to the expression column  
+7) Check the "Overlay" checkbox.  
+8) Click the gear next to overlay  
+9) Go to the image tab and click "Add Image"  
+10) Browse files to your border overlay.  
+  
+You can also fully replace a token if desired instead of using an overlay, and this is just the bare basics of TVA's features.
+  
 ## Current todo list
 # Trivial  
   
