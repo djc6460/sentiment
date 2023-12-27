@@ -33,22 +33,29 @@ To get to a token's settings for this:
 10) Browse files to your border overlay.  
   
 You can also fully replace a token if desired instead of using an overlay, and this is just the bare basics of TVA's features.
-  
+
 ## Current todo list
 # Trivial  
   
 # Normal  
 Actually make a real readme  
-Add settings page to disable automated messaging (wound/lock and such) or send them to self instead.  
-Add settings page to add bonuses to add universal bonuses to dye/do.  
-Add setting to colors to add default bonuses to dye/do/recover. (autofill the prompt)  
+Add settings page to disable automated messaging (wound/lock and such) or send them to self instead. (Partially done) 
+Add settings page to add bonuses to add universal bonuses to dye/do. (Done)  
+Add setting to colors to add default bonuses to dye/do/recover. (autofill the prompt) (Done for only do) 
 Fix color drag/drop. It broke at some point and will be useful in the future.  
 
-# Long Term  
-Add/Steal a status system to put icons over tokens.  
-
-Add a token image management system that supports automatic overlays when locking in a swing, add a token image tab to the sheet for one click changes as well.  
-  
+# Long Term    
 Add modifier system to gifts. When equipped, it will add an extra modifier to do/dye/recovers that is toggleable in the dialogue. Drag in colors to make them only apply to rolls involving the matching colors.  
   
 Clean up all the unused code from boilerplate, and organize the mess.  
+  
+Changelog:  
+-Added support to easily use TVA (Token Variant Art) to automatically change an actor's image when a swing is locked in.  
+-Added a new field to colors for "internal name", the only use for this is to override a swing's currentSwingName for the sake of TVA comparisons.  
+-Updated the sentiment color compendium to all have internal names for TVA.  
+-Added simple readme instructions for setting up TVA to automatically swap your tokens on lockin.  
+  
+-There are now recommended addons in the readme.  
+-Added a simple leveling up feature and a new settings tab for character sheets.  
+
+-Added convenience variables for default global bonuses for each roll type, and a default bonus for colors (for roll to do). They will autofill the "Bonuses" field in each popup.

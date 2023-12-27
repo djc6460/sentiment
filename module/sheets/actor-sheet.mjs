@@ -276,7 +276,7 @@ async _onRollToDye(event) {
   let attColor = "";
   let unlockedADie = false;
   //Dialogue Options
-  let userInput = await GetDyeBonusDialogue();
+  let userInput = await GetDyeBonusDialogue(actor.system.globalDyeBonus);
   if(userInput.cancelled) {
     return;
   }
@@ -386,7 +386,7 @@ async _onRollToRecover(event) {
   let attColor = "";
   
   //Dialogue Options
-  let userInput = await GetRecoverBonusDialogue();
+  let userInput = await GetRecoverBonusDialogue(actor.system.globalRecoverBonus);
   if(userInput.cancelled) {
     return;
   }
@@ -476,18 +476,25 @@ async _onRollToDo(event) {
   let rollArray = [];
   let colorArray = [];
   //Get Color Array
+  let colorDefaultBonus = "";
   for (const element of actor.items) {
     if(element.type==="color")
     {
       if(!(element.system.disabled || element.system.wounded))
       {
         colorArray.push(element);
+        if(element.system.isSwing)
+        {
+          colorDefaultBonus = element.system.globalBonus;
+        }
       }
     }
   };
-
+  if(colorDefaultBonus == "0")colorDefaultBonus = "";
+  if(colorDefaultBonus && actor.system.globalDoBonus && actor.system.globalDoBonus!="0" && actor.system.globalDoBonus.charAt(0) != "-")colorDefaultBonus+="+";
+  if(actor.system.globalDoBonus && actor.system.globalDoBonus!="0")colorDefaultBonus+=actor.system.globalDoBonus;
   //Dialogue Options
-  let userInput = await GetDoBonusDialogue(colorArray);
+  let userInput = await GetDoBonusDialogue(colorArray, colorDefaultBonus);
   if(userInput.cancelled) {
     return;
   }
@@ -630,12 +637,7 @@ async _onRollToDo(event) {
     {
       message = "Unlocked " + item.system.displayName;
     }
-    ChatMessage.create({
-      user: game.user._id,
-      speaker: ChatMessage.getSpeaker(),
-      content: message
-      }
-    );
+    CreateAutomatedMessage(this.actor, message);
   }
 
   async _onTogglePrimary(event) {
@@ -665,12 +667,8 @@ async _onRollToDo(event) {
       item.update({'system.isSwing':false});
       this.actor.update({'system.currentSwingName':"none"});
     }
-    ChatMessage.create({
-      user: game.user._id,
-      speaker: ChatMessage.getSpeaker(),
-      content: "Swing Dropped"
-      }
-    );
+    
+    CreateAutomatedMessage(this.actor,"Swing Dropped");
   }
   async _onToggleEquipped(event) {
     
@@ -726,12 +724,7 @@ async _onRollToDo(event) {
     {
       message = "Healed " + item.system.displayName;
     }
-    ChatMessage.create({
-      user: game.user._id,
-      speaker: ChatMessage.getSpeaker(),
-      content: message
-      }
-    );
+    CreateAutomatedMessage(this.actor,message);
   }
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
@@ -813,10 +806,11 @@ function _processGetDoBonusDialogue(form) {
       selectedColor: form.attribute.value
   }
 }
-async function GetDoBonusDialogue(colorArray)
+async function GetDoBonusDialogue(colorArray, defaultBonus)
 {
     const template = "systems/sentiment/templates/chat/roll-to-do-dialogue.html";
-    const html = await renderTemplate(template, {colors:colorArray});
+    if(!defaultBonus)defaultBonus="0";
+    const html = await renderTemplate(template, {colors:colorArray, defaultBonus:defaultBonus});
 
     return new Promise(resolve => {
         const data = {
@@ -844,10 +838,11 @@ function _processGetDyeBonusDialogue(form) {
       bonuses: form.bonuses.value
   }
 }
-async function GetDyeBonusDialogue()
+async function GetDyeBonusDialogue(defaultBonus)
 {
     const template = "systems/sentiment/templates/chat/roll-to-dye-dialogue.html";
-    const html = await renderTemplate(template, {});
+    if(!defaultBonus)defaultBonus="0";
+    const html = await renderTemplate(template, {"defaultBonus":defaultBonus});
 
     return new Promise(resolve => {
         const data = {
@@ -875,10 +870,11 @@ function _processGetRecoverBonusDialogue(form) {
       bonuses: form.bonuses.value
   }
 }
-async function GetRecoverBonusDialogue()
+async function GetRecoverBonusDialogue(defaultBonus)
 {
     const template = "systems/sentiment/templates/chat/roll-to-recover-dialogue.html";
-    const html = await renderTemplate(template, {});
+    if(!defaultBonus)defaultBonus="0";
+    const html = await renderTemplate(template, {"defaultBonus":defaultBonus});
 
     return new Promise(resolve => {
         const data = {
@@ -974,4 +970,16 @@ async function CreateRollFromUserString(userDiceString, defaultDiceString)
     roll = await new Roll(userDiceString).roll({async: true});
   }
   return roll;
+}
+function CreateAutomatedMessage(actor, message)
+{
+  if(!actor.system.automatedMessaging)return;
+  ChatMessage.create({
+    user: game.user._id,
+    speaker: ChatMessage.getSpeaker(),
+    content: message
+    }
+  );
+
+
 }
