@@ -16,7 +16,7 @@
       "thumbnail": "systems/sentiment/assets/anvil-bg-sentiment.png"
     }
   ],
-  "version": "1.0.5",
+  "version": "1.0.6",
   "compatibility": {
     "minimum": 11,
     "verified": "11.315"
@@ -44,7 +44,7 @@
   "packFolders": [],
   "socket": false,
   "manifest": "https://raw.githubusercontent.com/djc6460/sentiment/master/system.json",
-  "download": "https://github.com/djc6460/sentiment/releases/download/release-1.0.5/sentiment-release-1.0.5.zip",
+  "download": "https://github.com/djc6460/sentiment/releases/download/release-1.0.6/sentiment-release-1.0.6.zip",
   "background": "systems/sentiment/assets/anvil-bg-sentiment.png",
   "url":"https://github.com/djc6460/sentiment",
   "gridDistance": 5,
