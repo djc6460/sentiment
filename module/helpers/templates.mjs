@@ -8,5 +8,6 @@
 
     // Actor partials.
     "systems/sentiment/templates/actor/parts/actor-gifts.html",
+    "systems/sentiment/templates/actor/parts/actor-summary.html",
   ]);
 };

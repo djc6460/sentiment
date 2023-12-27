@@ -583,7 +583,7 @@ async _onRollToDo(event) {
 }
 
   /**
-   * Spend xp on an item
+   * Spend xp on an attribute
    * @param {Event} event   The originating click event
    * @private
    */
@@ -601,7 +601,11 @@ async _onRollToDo(event) {
       item.update({'system.value':item.system.value+1});
       this.actor.update({'system.attributes.experience.value':currentXP});
     }
-  }
+  }/**
+   * Spend xp on an hp
+   * @param {Event} event   The originating click event
+   * @private
+   */
   async _onSpendXpOnHP(event) {
     let currentXP = this.actor.system.attributes.experience.value;
     let neededXP = Math.floor((this.actor.system.health.max) / 10) + 2;;
@@ -627,6 +631,11 @@ async _onRollToDo(event) {
     if (item) {
       item.system.locked = !item.system.locked;
       item.update({'system.locked':item.system.locked});
+      if(item.system.locked && item.system.isSwing)
+      {
+        item.update({"system.isSwing":false});
+        this.actor.update({'system.currentSwingName':"none"});
+      }
     }
     let message = '';
     if(item.system.locked)
@@ -640,6 +649,11 @@ async _onRollToDo(event) {
     CreateAutomatedMessage(this.actor, message);
   }
 
+/**
+   * Toggle the primary status of a gift
+   * @param {Event} event   The originating click event
+   * @private
+   */
   async _onTogglePrimary(event) {
     
     const element = event.currentTarget;
@@ -655,7 +669,11 @@ async _onRollToDo(event) {
       item.update({'system.isEquipped':item.system.isEquipped, 'system.isPrimary':item.system.isPrimary});
     }
   }
-  
+  /**
+   * Drop the actor's swing.
+   * @param {Event} event   The originating click event
+   * @private
+   */
   async _onRemoveSwing(event) {
     
     const element = event.currentTarget;
@@ -670,6 +688,11 @@ async _onRollToDo(event) {
     
     CreateAutomatedMessage(this.actor,"Swing Dropped");
   }
+  /**
+   * Toggle the equip status of a gift
+   * @param {Event} event   The originating click event
+   * @private
+   */
   async _onToggleEquipped(event) {
     
     const element = event.currentTarget;
@@ -686,7 +709,12 @@ async _onRollToDo(event) {
       item.update({'system.isEquipped':item.system.isEquipped, 'system.isPrimary':item.system.isPrimary});
     }
   }
-  
+
+  /**
+   * Toggle the expand status of a gift or attribute
+   * @param {Event} event   The originating click event
+   * @private
+   */
   async _onToggleExpand(event) {
     
     const element = event.currentTarget;
@@ -700,20 +728,24 @@ async _onRollToDo(event) {
   }
 
   /**
-   * Toggle the wound status on an item
+   * Toggle the wound status of an attribute
    * @param {Event} event   The originating click event
    * @private
    */
   async _onToggleWound(event) {
     
     const element = event.currentTarget;
-    //const dataset = element.dataset;
 
     const itemId = element.closest('.item').dataset.itemId;
     const item = this.actor.items.get(itemId);
     if (item) {
       item.system.wounded = !item.system.wounded;
       item.update({'system.wounded':item.system.wounded});
+      if(item.system.wounded && item.system.isSwing)
+      {
+        item.update({"system.isSwing":false});
+        this.actor.update({'system.currentSwingName':"none"});
+      }
     }
     let message = '';
     if(item.system.wounded)
@@ -929,7 +961,6 @@ async function SetSwingBonusDialogue(colorArray)
         new Dialog(data,null).render(true);
     });
 }
-
 //Removes all rolls with no result values. Dice so nice fails if it's passed a roll with no dice results.
 function cleanseDice(rollArray)
 {
@@ -947,7 +978,6 @@ var diceSoNiceArray = [];
   });
   return diceSoNiceArray;
 }
-
 //User can give us bad roll data so we return either the roll or a fake roll for a bad string
 async function CreateRollFromUserString(userDiceString, defaultDiceString)
 {
@@ -980,6 +1010,4 @@ function CreateAutomatedMessage(actor, message)
     content: message
     }
   );
-
-
 }
