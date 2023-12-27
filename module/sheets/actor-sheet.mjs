@@ -143,12 +143,7 @@ export class SentimentActorSheet extends ActorSheet {
     html.find('.item-igniteButton').click(this._onIgnite.bind(this));
 
     // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.delete();
-      li.slideUp(200, () => this.render(false));
-    });
+    html.find('.item-delete').click(this._onDelete.bind(this));
 
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
@@ -174,6 +169,21 @@ export class SentimentActorSheet extends ActorSheet {
   "rollToDye": "systems/sentiment/templates/chat/roll-to-dye-chat.html",
   "rollToRecover": "systems/sentiment/templates/chat/roll-to-recover-chat.html",
 }
+
+async _onDelete(ev)
+{
+  const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+
+      let userInput = await CreateConfirmationDialogue();
+      if(userInput.cancelled) {
+        return;
+      }
+
+      item.delete();
+      li.slideUp(200, () => this.render(false));
+}
+
 async _onIgnite(event) {
   let actor = this.actor;
   let color;
@@ -948,6 +958,32 @@ async function SetSwingBonusDialogue(colorArray)
                 normal: {
                     label: "Set",
                     callback: html => resolve(_processSetSwingDialogue(html[0].querySelector("form")))
+                },
+                cancel: {
+                    label: "Cancel",
+                    callback: html => resolve({cancelled:true})
+                }
+            },
+            default:"normal",
+            close: () => resolve({cancelled:true})
+        }
+
+        new Dialog(data,null).render(true);
+    });
+}
+async function CreateConfirmationDialogue()
+{
+    const template = "systems/sentiment/templates/chat/confirmation-dialogue.html";
+    const html = await renderTemplate(template, {});
+
+    return new Promise(resolve => {
+        const data = {
+            title: "Delete",
+            content: html,
+            buttons: {
+                normal: {
+                    label: "Confirm",
+                    callback: html => resolve({cancelled:false})
                 },
                 cancel: {
                     label: "Cancel",

@@ -49,3 +49,5 @@ Moved summary screen to template
 Drop swing when lock/wounding it
 Fixed color drag/drop features
 Fixed the formatting on color clickables.
+Added confirmation for deletes
+Added default borders
