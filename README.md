@@ -39,14 +39,13 @@ You can also fully replace a token if desired instead of using an overlay, and t
   
 # Normal  
 Actually make a real readme  
-Add settings page to disable automated messaging (wound/lock and such) or send them to self instead. (Partially done) 
-Add settings page to add bonuses to add universal bonuses to dye/do. (Done)  
-Add setting to colors to add default bonuses to dye/do/recover. (autofill the prompt) (Done for only do) 
-Fix color drag/drop. It broke at some point and will be useful in the future.  
+Add settings page to disable automated messaging (wound/lock and such) or send them to self instead. (Partially done)   
 
 # Long Term    
 Add modifier system to gifts. When equipped, it will add an extra modifier to do/dye/recovers that is toggleable in the dialogue. Drag in colors to make them only apply to rolls involving the matching colors.  
   
-Clean up all the unused code from boilerplate, and organize the mess.  
-  
 Changelog:  
+Moved summary screen to template
+Drop swing when lock/wounding it
+Fixed color drag/drop features
+Fixed the formatting on color clickables.

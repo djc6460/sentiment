@@ -27,8 +27,8 @@ export class SentimentActor extends Actor {
       data.prototypeToken = mergeObject(data.prototypeToken || {}, {
         actorLink: true,
         disposition: 1,
-        displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
-        displayBars: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
+        //displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
+        //displayBars: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
         sight: {
           enabled: true
         },
