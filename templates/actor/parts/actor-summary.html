@@ -37,12 +37,12 @@
               <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
             </div>
           </div>
-          {{#if color.system.expanded}}
-          <div class="item flexrow flex-group-center color-row-expanded">
-            {{editor color.system.description target="color.system.description" rollData=rollData button=true owner=owner editable=false}}
-          </div>
-          {{/if}}
         </li>
+        {{#if color.system.expanded}}
+        <li class="flexrow flex-group-center color-row-expanded">
+          {{editor color.system.description target="color.system.description" rollData=rollData button=true owner=owner editable=false}}
+        </li>
+        {{/if}}
         {{/each}}
         </div>
       <li class="rollButtons grid grid-3col">

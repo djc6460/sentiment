@@ -51,3 +51,4 @@ Fixed color drag/drop features
 Fixed the formatting on color clickables.
 Added confirmation for deletes
 Added default borders
+Fix for broken color descriptions

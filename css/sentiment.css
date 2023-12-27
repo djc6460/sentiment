@@ -20,13 +20,22 @@
   border-width: 0px 0px 1px 0px;
   border-color: #b6b49b;
 }
-.color-row-expanded {
-    border-style: solid;
-    border-width: 0px 1px 1px 1px;
-    border-color: #b6b49b;
-    padding-left: 30px;
-    padding-right: 60px;
+.flexrow.flex-group-center.color-row-expanded {
+    margin-left: 43px;
+    padding-right: 100px;
     font-size: 12px;
+    border-style: solid;
+    border-color: #b6b49b;
+    border-width: 0px 1px 1px 1px;
+}
+
+.item.flexrow.flex-group-center.color-row-expanded:last-child{
+  border-bottom: none;
+}
+.flexrow.flex-group-center.color-row-expanded:last-child{
+  border-style: solid;
+  border-color: #b6b49b;
+  border-width: 0px 1px 1px 1px;
 }
 .gift-row-expanded {
     border-style: solid;
@@ -492,9 +501,7 @@
   overflow-x: hidden;
 }
 .sentiment .items-list .item-controls {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: contents;
   -webkit-box-flex: 0;
   -ms-flex: 0 0 100px;
   flex: 50px 0 100px;
