@@ -52,3 +52,4 @@ Fixed the formatting on color clickables.
 Added confirmation for deletes
 Added default borders
 Fix for broken color descriptions
+Items dragged to other sheets/libraries override all their sheet flag settings before being copied (such as 'equipped').

@@ -14,7 +14,32 @@ export class SentimentItem extends Item {
     if (this.type === 'color') { this.img = "systems/sentiment/assets/color_icon.png" }
     if (this.type === 'gift') { this.img = "systems/sentiment/assets/gift_icon.png" }
   }
+  //Override all the flags used by the character sheet when a new item is created.
+  _preCreate(doc, data, options, user){
+    super._preCreate(doc, data, options, user);
+  }
+  _preCreate(data, options, user){
+    if(data.type=="color")
+    {
+      this.updateSource({
+      "system.wounded": false,
+      "system.locked": false,
+      "system.expanded": false,
+      "system.isSwing": false,
+      "system.swingValue": 0,
+      "system.disabled": 0
+      })
+    }
+    if(data.type=="gift")
+    {
+      this.updateSource({
+        "system.isPrimary":false,
+        "system.isEquipped":false,
+        "system.expanded":false})
+    }
+    super._preCreate(data, options, user);
 
+  }
   /**
    * Prepare a data object which is passed to any Roll formulas which are created related to this Item
    * @private
