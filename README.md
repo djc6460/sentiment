@@ -48,11 +48,3 @@ Add settings page to disable automated messaging (wound/lock and such) or send t
 Add modifier system to gifts. When equipped, it will add an extra modifier to do/dye/recovers that is toggleable in the dialogue. Drag in colors to make them only apply to rolls involving the matching colors.  
   
 Changelog:  
-Moved summary screen to template
-Drop swing when lock/wounding it
-Fixed color drag/drop features
-Fixed the formatting on color clickables.
-Added confirmation for deletes
-Added default borders
-Fix for broken color descriptions
-Items dragged to other sheets/libraries override all their sheet flag settings before being copied (such as 'equipped').
