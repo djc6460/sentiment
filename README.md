@@ -13,13 +13,16 @@ Condition Lab and Triggler - Primarily for condition lab, allows you to make cus
 # Generally Useful for any System:  
 PopOut!, Drag Upload, Drag Ruler, Dice so Nice, Dice Tray, Quick Insert  
   
+# System Video Tour
+[![Video Tour](https://img.youtube.com/vi/iVC9WwRSAs8/maxresdefault.jpg)](https://youtu.be/iVC9WwRSAs8)
+
 # Token Variant Art Support  
 There are special fields to use with Token Variant Art to make automatic swapping of borders when you lock in a color.    
 Use the following as an expression: actor.system.currentSwingName="blue"    
 You replace blue with the attribute's name (case sensitive), or you can override a color's currentSwingName name by changing the color's "internal name" value.  
-(Todo, create and link a config here for global borders)  
   
-(Todo: Image Guide)  
+A Global Border Config is now included with the system. You can also grab it here: https://github.com/djc6460/sentiment/blob/main/assets/default-borders/token-variants-global-mappings.json  
+  
 To get to a token's settings for this:  
 1) Click the token  
 2) Right Click the TVA button (should be bottom right icon)  
