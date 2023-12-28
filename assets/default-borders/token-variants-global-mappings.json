@@ -40,7 +40,7 @@
         "linkStageScale": false,
         "loop": true,
         "playOnce": false,
-        "img": "worlds/anime-campaign/assets/tokens/borders/black_border.png",
+        "img": "systems/sentiment/assets/default-borders/black_border.png",
         "repeating": false,
         "alpha": "1",
         "tint": "",
@@ -148,7 +148,7 @@
         "playOnce": false,
         "img": [
           {
-            "src": "worlds/anime-campaign/assets/tokens/borders/blue_border.png",
+            "src": "systems/sentiment/assets/default-borders/blue_border.png",
             "linked": false
           }
         ],
