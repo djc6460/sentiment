@@ -314,9 +314,12 @@ async _onRollToDye(event) {
         colorLockArray.push(element);
 
         //Unlock dice that get rolled as locked.
-        let item = this.actor.items.get(element._id);
-        item.update({'system.locked':false});
-        unlockedADie = true;
+        if(actor.system.autoUnlock)
+        {
+          let item = this.actor.items.get(element._id);
+          item.update({'system.locked':false});
+          unlockedADie = true;
+        }
 
       }
       else
@@ -888,7 +891,7 @@ async function GetDyeBonusDialogue(defaultBonus)
 
     return new Promise(resolve => {
         const data = {
-            title: "Roll to Do",
+            title: "Roll to Dye",
             content: html,
             buttons: {
                 normal: {

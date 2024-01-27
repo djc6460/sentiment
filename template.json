@@ -14,7 +14,8 @@
         "automatedMessaging":true,
         "globalDyeBonus":"",
         "globalDoBonus":"",
-        "globalRecoverBonus":""
+        "globalRecoverBonus":"",
+        "autoUnlock":true
       }
     },
     "character": {
@@ -41,7 +42,7 @@
     }
   },
   "Item": {
-    "types": ["color", "gift"],
+    "types": ["color", "gift", "giftbonus"],
     "templates": {
       "base": {
         "description": ""
@@ -71,7 +72,14 @@
       "isEquipped": false,
       "expanded": false,
       "primaryDescription": "",
-      "levelDescription": ""
+      "levelDescription": "",
+      "modifierIDs":[]
+    },
+    "giftbonus":{
+       "enabled":true,
+       "colorID":"",
+       "bonus":"0",
+       "isPrimary":false
     }
   }
 }
