@@ -12,12 +12,14 @@
             <div class="item flexrow flex-group-center {{#if system.disabled}}disabled{{/if}} {{#unless color.system.expanded}}color-row{{/unless}}"
                 data-item-id="{{color._id}}">
                 <div class="colorblock-small" style="background-color: {{color.system.hexColor}};">
-                    <div class="rollable" data-roll-type='color'>{{color.system.value}}</div>{{#if
-                    color.system.isSwing}}<a class="item-remove-swing">
+                    <div class="rollable" data-roll-type='color'>{{color.system.value}}</div>
+                    {{#if color.system.isSwing}}
+                    <a class="item-remove-swing">
                         <div class="colorblock-small block-swing floatingSwing">
                             <div>{{color.system.swingValue}}</div>
                         </div>
-                    </a>{{/if}}
+                    </a>
+                    {{/if}}
                 </div>
                 {{#if color.system.wounded}}<s>{{/if}}
                     {{#if color.system.locked}}<em>{{/if}}
