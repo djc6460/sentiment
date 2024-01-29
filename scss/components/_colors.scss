@@ -38,12 +38,13 @@
     padding-right: 4px;
 }
 
+$size: 40px;
 .colorblock-small
 {
-    height: 40px;
-    width: 40px;
-    max-height: 40px;
-    max-width: 40px;
+    height: $size;
+    width: $size;
+    max-height: $size;
+    max-width: $size;
     border-style: solid;
     border-radius: 5px;
 } 
