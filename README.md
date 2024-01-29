@@ -5,12 +5,12 @@ This system is for the in development ttrpg sentiment. It is currently bare bone
 ## Recommended Modules  
 All of these are searchable  
   
-# 'Essential' for Sentiment:
+### 'Essential' for Sentiment:
 Bar Brawl - Allows you to make custom bars and variables for tokens.  
 Token Variant Art - Essential for easy swapping of token faces (If you like having borders match your attributes)  
 Condition Lab and Triggler - Primarily for condition lab, allows you to make custom conditions and icons for them (For various gift buffs)  
   
-# Generally Useful for any System:  
+### Generally Useful for any System:  
 PopOut!, Drag Upload, Drag Ruler, Dice so Nice, Dice Tray, Quick Insert  
   
 # System Video Tour
@@ -37,14 +37,14 @@ To get to a token's settings for this:
   
 You can also fully replace a token if desired instead of using an overlay, and this is just the bare basics of TVA's features.
 
-## Current todo list
-# Trivial  
+# Current todo list
+## Trivial  
   
-# Normal  
+## Normal  
 Actually make a real readme  
 Add settings page to disable automated messaging (wound/lock and such) or send them to self instead. (Partially done)   
 
-# Long Term    
+## Long Term    
 Add modifier system to gifts. When equipped, it will add an extra modifier to do/dye/recovers that is toggleable in the dialogue. Drag in colors to make them only apply to rolls involving the matching colors.  
   
 Changelog:  
