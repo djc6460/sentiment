@@ -70,10 +70,13 @@ export class SentimentItemSheet extends ItemSheet {
     }
 
     let colors = [];
-    for (let i of this.actor.items) {
-      // Append to color
-      if (i.type === 'color') {
-        colors.push(i);
+    if(this.actor)
+    {
+      for (let i of this.actor.items) {
+        // Append to color
+        if (i.type === 'color') {
+          colors.push(i);
+        }
       }
     }
 
