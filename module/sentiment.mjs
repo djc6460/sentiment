@@ -1,15 +1,36 @@
 // Import document classes.
 import { SentimentActor } from "./documents/actor.mjs";
+import { 
+  SentimentCharacterData, 
+  SentimentNpcData,
+  SentimentColorData,
+  SentimentGiftData,
+  SentimentGiftBonusData 
+} from "./data-models.mjs";
 import { SentimentItem } from "./documents/item.mjs";
 // Import sheet classes.
 import { SentimentActorSheet } from "./sheets/actor-sheet.mjs";
 import { SentimentItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
-import { BOILERPLATE } from "./helpers/config.mjs";
 
 import * as Chat from "./documents/chat.mjs"
 
+// Define custom Document classes instantly to prevent premature schema compilation crashes
+CONFIG.Actor.documentClass = SentimentActor;
+CONFIG.Item.documentClass = SentimentItem;
+
+// Bind data models synchronously so the initialization tree captures them immediately
+CONFIG.Actor.dataModels = {
+  character: SentimentCharacterData,
+  npc: SentimentNpcData
+};
+
+CONFIG.Item.dataModels = {
+  color: SentimentColorData,
+  gift: SentimentGiftData,
+  giftbonus: SentimentGiftBonusData
+};
 /* -------------------------------------------- */
 /*  Init Hook                                   */
 /* -------------------------------------------- */
@@ -24,9 +45,6 @@ Hooks.once('init', async function() {
     rollItemMacro
   };
 
-  // Add custom constants for configuration.
-  CONFIG.BOILERPLATE = BOILERPLATE;
-
   /**
    * Set an initiative formula for the system
    * @type {String}
@@ -36,14 +54,19 @@ Hooks.once('init', async function() {
     decimals: 2
   };
 
-  // Define custom Document classes
-  CONFIG.Actor.documentClass = SentimentActor;
-  CONFIG.Item.documentClass = SentimentItem;
-
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("sentiment", SentimentActorSheet, { makeDefault: true });
+  Actors.registerSheet("sentiment", SentimentActorSheet, {
+    types: ["character", "npc"],
+    makeDefault: true,
+    label: "Sentiment Actor Sheet"
+  });
   Items.unregisterSheet("core", ItemSheet);
+  Items.registerSheet("sentiment", SentimentActorSheet, {
+    types: ["color", "gift", "giftbonus"],
+    makeDefault: true,
+    label: "Sentiment Item Sheet"
+  });
   Items.registerSheet("sentiment", SentimentItemSheet, { makeDefault: true });
 
   // Preload Handlebars templates.

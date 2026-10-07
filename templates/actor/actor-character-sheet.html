@@ -19,7 +19,7 @@
           <input type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
           <span> / </span>
           <input type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
-          </div>{{#if system.showLeveling}}<a class="item-spendxponhp" title="Increase HP by 1"><i class="fas fa-up"></i> (XP: {{system.xpToLevelHP}})</a>{{/if}}
+          </div>{{#if system.showLeveling}}<a class="item-spendxponhp" title="Increase HP by 1"><i class="fas fa-up"></i> (XP: {{xpToLevelHP}})</a>{{/if}}
         </div>
 
         <div class="resource flex-group-center">
@@ -64,17 +64,16 @@
 
     {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
-      {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actors roll data to the rollData property. --}}
-      {{editor system.biography target="system.biography" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor enrichedBiography target="system.biography" button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Settings Tab --}}
     <div class="tab settings" data-group="primary" data-tab="settings">
-      <input type="checkbox" name="system.showLeveling" {{checked system.showLeveling}}>
+      <input type="checkbox" name="system.showLeveling" {{checked this.system.showLeveling}}>
       <label><b style="position: relative;top: -4px;">Show Leveling</b></label><br>
-      <input type="checkbox" name="system.automatedMessaging" {{checked system.automatedMessaging}}>
+      <input type="checkbox" name="system.automatedMessaging" {{checked this.system.automatedMessaging}}>
       <label><b style="position: relative;top: -4px;">Show Automated Messages (Lock/Wound)</b></label><br>
-      <input type="checkbox" name="system.autoUnlock" {{checked system.autoUnlock}}>
+      <input type="checkbox" name="system.autoUnlock" {{checked this.system.autoUnlock}}>
       <label><b style="position: relative;top: -4px;">Automatically Unlock on Dye</b></label><br>
       <label class="resource-label">Default Do Bonus</label>
       <input type="text" name="system.globalDoBonus" value="{{system.globalDoBonus}}" data-dtype="String"/>
@@ -83,10 +82,6 @@
       <label class="resource-label">Default Recover Bonus</label>
       <input type="text" name="system.globalRecoverBonus" value="{{system.globalRecoverBonus}}" data-dtype="String"/>
     </div>
-
-
-    </div>
-
   </section>
 </form>
 

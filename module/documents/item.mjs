@@ -95,9 +95,9 @@ export class SentimentItem extends Item {
       const rollData = this.getRollData();
 
       // Invoke the roll and submit it to chat.
-      const roll = new Roll(rollData.item.formula, rollData);
+      const roll = Roll.create(rollData.item.formula, rollData);
       // If you need to store the value first, uncomment the next line.
-      // let result = await roll.roll({async: true});
+      // let result = roll.evaluate();
       roll.toMessage({
         speaker: speaker,
         rollMode: rollMode,

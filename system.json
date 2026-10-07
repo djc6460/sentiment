@@ -16,10 +16,10 @@
       "thumbnail": "systems/sentiment/assets/anvil-bg-sentiment.png"
     }
   ],
-  "version": "1.0.8",
+  "version": "1.0.9",
   "compatibility": {
-    "minimum": 11,
-    "verified": "11.315"
+    "minimum": 14,
+    "verified": "14.386"
   },
   "esmodules": ["module/sentiment.mjs"],
   "styles": ["css/sentiment.css"],
@@ -44,10 +44,75 @@
   "packFolders": [],
   "socket": false,
   "manifest": "https://raw.githubusercontent.com/djc6460/sentiment/master/system.json",
-  "download": "https://github.com/djc6460/sentiment/releases/download/release-1.0.8/sentiment-release-1.0.8.zip",
+  "download": "https://github.com/djc6460/sentiment/releases/download/release-1.0.9/sentiment-release-1.0.9.zip",
   "background": "systems/sentiment/assets/anvil-bg-sentiment.png",
   "url":"https://github.com/djc6460/sentiment",
-  "gridDistance": 5,
-  "gridUnits": "ft",
-  "primaryTokenAttribute": "health"
+  "primaryTokenAttribute": "health",
+
+  "documentTypes": {
+  "Actor": {
+    "character": {
+      "templates": ["base"],
+      "attributes": {
+        "experience": {
+          "value": 0
+        },
+        "speed": {
+          "value":30
+        }
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "attributes": {
+        "experience": {
+          "value": 0
+        },
+        "speed": {
+          "value":30
+        }
+      }
+    }
+  },
+  "Item": {
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "color": {
+      "templates": ["base"],
+      "hexColor": "#FFFF00",
+      "value": 0,
+      "wounded": false,
+      "locked": false,
+      "expanded": false,
+      "displayName":"color",
+      "isSwing":false,
+      "swingValue": 0,
+      "disabled":0,
+      "diceSize":"1d6",
+      "internalName":"",
+      "globalBonus":""
+
+    },
+    "gift":{
+      "templates": ["base"],
+      "isPrimary": false,
+      "showPrimary":false,
+      "showLeveling":false,
+      "isEquipped": false,
+      "expanded": false,
+      "primaryDescription": "",
+      "levelDescription": "",
+      "modifierIDs":[]
+    },
+    "giftbonus":{
+       "enabled":true,
+       "colorID":"",
+       "bonus":"0",
+       "isPrimary":false
+    }
+  }
+}
 }

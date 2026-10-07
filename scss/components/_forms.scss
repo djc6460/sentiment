@@ -1,7 +1,11 @@
 .item-form {
   font-family: $font-primary;
 }
-
+.editor
+  {
+    min-height: 100px;
+    height: auto; /* This is the default behavior */
+  }
 .sheet-header {
   flex: 0 auto;
   overflow: hidden;

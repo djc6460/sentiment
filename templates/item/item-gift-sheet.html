@@ -21,18 +21,18 @@
       
       {{#if system.showPrimary}}
       <label><b>Primary Effects</b></label>
-      <div class="editor-minHeight">
-        {{editor system.primaryDescription target="system.primaryDescription" rollData=rollData button=true owner=owner editable=editable}}
+      <div class="form-group editor-minHeight">
+        {{editor enrichedPrimaryDescription target="system.primaryDescription" rollData=rollData button=true owner=owner editable=editable}}
       </div>
       {{/if}}
       <label><b>Description</b></label>
-      <div class="form-group">
-        {{editor system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}&nbsp;
+      <div class="form-group editor-minHeight">
+        {{editor enrichedDescription target="system.description" rollData=rollData button=true owner=owner editable=editable}}&nbsp;
       </div>
       {{#if system.showLeveling}}
       <label><b>Level Up Details</b></label>
-      <div class="form-group">
-        {{editor system.levelDescription target="system.levelDescription" rollData=rollData button=true owner=owner editable=editable}}&nbsp;
+      <div class="form-group editor-minHeight">
+        {{editor enrichedLevelDescription target="system.levelDescription" rollData=rollData button=true owner=owner editable=editable}}&nbsp;
       </div>
       {{/if}}
     </div>

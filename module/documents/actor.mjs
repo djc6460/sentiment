@@ -17,14 +17,23 @@ export class SentimentActor extends Actor {
     if ( (await super._preCreate(data, options, user)) === false ) return false;
 
     // Configure prototype token settings
-    const prototypeToken = {};
-    if ( this.type === "character" ) Object.assign(prototypeToken, {actorLink: true});
-    this.updateSource({ prototypeToken });
+    if (this.type === "character") {
+      this.updateSource({
+        "prototypeToken.actorLink": true,
+        "prototypeToken.disposition": 1,
+        "prototypeToken.sight.enabled": true,
+        "prototypeToken.detectionModes": [{
+          id: 'basicSight',
+          range: 30,
+          enabled: true
+        }]
+      });
+    }
   }
-  //Create a new actor - When creating an actor set basics including tokenlink, bars, displays sight
+  /*Create a new actor - When creating an actor set basics including tokenlink, bars, displays sight
   static async create (data, options = {}) {
     if (data.type === 'character') {
-      data.prototypeToken = mergeObject(data.prototypeToken || {}, {
+      data.prototypeToken = foundry.utils.mergeObject(data.prototypeToken || {}, {
         actorLink: true,
         disposition: 1,
         //displayName: CONST.TOKEN_DISPLAY_MODES.ALWAYS,
@@ -39,14 +48,14 @@ export class SentimentActor extends Actor {
         }]
       })
     } 
-    let actor = await super.create(data, options)
-    return 
-}
+    return await super.create(data, options);
+}*/
 
   /** @override */
   prepareBaseData() {
     // Data modifications in this step occur before processing embedded
     // documents or derived data.
+    super.prepareBaseData();
   }
 
   /**
@@ -59,32 +68,26 @@ export class SentimentActor extends Actor {
    * is queried and has a roll executed directly from it).
    */
   prepareDerivedData() {
-    const actorData = this;
-    const systemData = actorData.system;
-    const flags = actorData.flags.sentiment || {};
+    super.prepareDerivedData();
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
-    this._prepareCharacterData(actorData);
-    this._prepareNpcData(actorData);
+    this._prepareCharacterData();
+    this._prepareNpcData();
   }
 
   /**
    * Prepare Character type specific data
    */
-  _prepareCharacterData(actorData) {
-    if (actorData.type !== 'character') return;
-
-    const systemData = actorData.system;
+  _prepareCharacterData() {
+    if (this.type !== 'character') return;
   }
 
   /**
    * Prepare NPC type specific data.
    */
-  _prepareNpcData(actorData) {
-    if (actorData.type !== 'npc') return;
-
-    const systemData = actorData.system;
+  _prepareNpcData() {
+    if (this.type !== 'npc') return;
   }
 
   /**
@@ -110,14 +113,12 @@ export class SentimentActor extends Actor {
     // formulas like `@str.mod + 4`.
     if (data.abilities) {
       for (let [k, v] of Object.entries(data.abilities)) {
-        data[k] = foundry.utils.deepClone(v);
+        if (v) data[k] = foundry.utils.deepClone(v);
       }
     }
 
     // Add level for easier access, or fall back to 0.
-    if (data.attributes.level) {
-      data.lvl = data.attributes.level.value ?? 0;
-    }
+    data.lvl = data.attributes?.level?.value ?? 0;
   }
 
   /**
@@ -125,8 +126,6 @@ export class SentimentActor extends Actor {
    */
   _getNpcRollData(data) {
     if (this.type !== 'npc') return;
-
-    // Process additional NPC data here.
   }
 
 }

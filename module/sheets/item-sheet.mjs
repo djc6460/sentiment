@@ -6,7 +6,7 @@ export class SentimentItemSheet extends ItemSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sentiment", "sheet", "item"],
       width: 520,
       height: 480,
@@ -28,28 +28,28 @@ export class SentimentItemSheet extends ItemSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
-    // Retrieve base data structure.
-    const context = super.getData();
+  async getData(options={}) {
+    const context = await super.getData(options);
 
-    // Use a safe clone of the item data for further operations.
-    const itemData = context.item;
+    const item = this.item;
 
-    // Retrieve the roll data for TinyMCE editors.
+    context.item = item;
+    context.system = item.system;
+    context.flags = item.flags;
+
     context.rollData = {};
-
-    if (itemData.type == 'gift') {
-      this._prepareItems(context);
-    }
-
-    let actor = this.object?.parent ?? null;
+    const actor = item.parent ?? null;
     if (actor) {
       context.rollData = actor.getRollData();
     }
 
-    // Add the actor's data to context.data for easier access, as well as flags.
-    context.system = itemData.system;
-    context.flags = itemData.flags;
+    if (item.type === 'gift') {
+      this._prepareItems(context);
+      context.enrichedPrimaryDescription = await TextEditor.enrichHTML(item.system.primaryDescription, {async: true, rollData: context.rollData});
+      context.enrichedLevelDescription = await TextEditor.enrichHTML(item.system.levelDescription, {async: true, rollData: context.rollData});
+    }
+
+    context.enrichedDescription = await TextEditor.enrichHTML(item.system.description, {async: true, rollData: context.rollData});
 
     return context;
   }
@@ -93,7 +93,7 @@ export class SentimentItemSheet extends ItemSheet {
     // Get the type of item to create.
     const type = header.dataset.type;
     // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
+    const data = foundry.utils.duplicate(header.dataset);
     // Initialize a default name.
     const name = `New ${type.capitalize()}`;
     // Prepare the item object.
@@ -184,6 +184,6 @@ async function CreateConfirmationDialogue()
             close: () => resolve({cancelled:true})
         }
 
-        new Dialog(data,null).render(true);
+        new Dialog(data,{}).render(true);
     });
 }

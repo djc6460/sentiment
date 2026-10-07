@@ -1,6 +1,6 @@
 export function addChatListeners(html)
 {
-    html.on('click', '.btn-selectSwing', onSelectSwing);
+    $(html).on('click', '.btn-selectSwing', onSelectSwing);
 }
 
 function onSelectSwing(event)

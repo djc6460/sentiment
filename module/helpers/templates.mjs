@@ -3,11 +3,13 @@
  * Pre-loaded templates are compiled and cached for fast access when rendering
  * @return {Promise}
  */
- export const preloadHandlebarsTemplates = async function() {
-  return loadTemplates([
-
-    // Actor partials.
-    "systems/sentiment/templates/actor/parts/actor-gifts.html",
+export const preloadHandlebarsTemplates = async function() {
+  const templatePaths = [
+    // You MUST include your core layouts and sub-partials here
+    "systems/sentiment/templates/actor/actor-character-sheet.html",
+    "systems/sentiment/templates/actor/actor-npc-sheet.html",
     "systems/sentiment/templates/actor/parts/actor-summary.html",
-  ]);
+    "systems/sentiment/templates/actor/parts/actor-gifts.html"
+  ];
+  return loadTemplates(templatePaths);
 };

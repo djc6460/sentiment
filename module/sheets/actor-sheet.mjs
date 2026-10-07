@@ -8,12 +8,12 @@ export class SentimentActorSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sentiment", "sheet", "actor"],
-      template: "systems/sentiment/templates/actor/actor-sheet.html",
+      template: "systems/sentiment/templates/actor/actor-character-sheet.html",
       width: 600,
       height: 600,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", group: "primary", initial: "summary"  }]
     });
   }
 
@@ -25,36 +25,35 @@ export class SentimentActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+ async getData(options={}) {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's
     // editable, the items array, and the effects array.
-    const context = super.getData();
+    const context = await super.getData(options);
 
-    // Use a safe clone of the actor data for further operations.
-    const actorData = this.actor.toObject(false);
-
-    // Add the actor's data to context.data for easier access, as well as flags.
-    context.system = actorData.system;
-    context.flags = actorData.flags;
+    context.actor = this.actor;
+    context.system = this.actor.system;
+    context.flags = this.actor.flags;
 
     // Prepare character data and items.
-    if (actorData.type == 'character') {
+    if (this.actor.type === 'character') {
       this._prepareItems(context);
       this._prepareCharacterData(context);
     }
 
     // Prepare NPC data and items.
-    if (actorData.type == 'npc') {
+    if (this.actor.type === 'npc') {
       this._prepareItems(context);
     }
 
     // Add roll data for TinyMCE editors.
-    context.rollData = context.actor.getRollData();
+    context.rollData = this.actor.getRollData();
 
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
+
+    context.enrichedBiography = await TextEditor.enrichHTML(this.actor.system.biography, {async: true, rollData: context.rollData});
 
     return context;
   }
@@ -80,14 +79,14 @@ export class SentimentActorSheet extends ActorSheet {
     // Initialize containers.
     const gifts = [];
     const colors = [];
-    context.system.xpToLevelHP = Math.floor((context.system.health.max) / 10) + 2;
+    context.xpToLevelHP = Math.floor((this.actor.system.health.max) / 10) + 2;
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
       // Append to color
       if (i.type === 'color') {
         colors.push(i);
-        i.system.xpToLevel = (i.system.value + 1) * 10;
+        i.xpToLevel  = (i.system.value + 1) * 10;
       }
       // Append to gift.
       else if (i.type === 'gift') {
@@ -293,7 +292,7 @@ async _onRollToDye(event) {
   let bonuses = userInput.bonuses;
 
   var formulaRoll;
-  formulaRoll = await CreateRollFromUserString(bonuses, "0");
+  formulaRoll = await CreateRollFromUserString(bonuses, "0", actor);
   total+=formulaRoll.total;
   colorRollArray.push(formulaRoll);
 
@@ -328,12 +327,12 @@ async _onRollToDye(event) {
         obj.colorItem = element;
         var roll;
         if(element.system.isSwing) {
-          roll = await CreateRollFromUserString(element.system.swingValue, "0");
+          roll = await CreateRollFromUserString(element.system.swingValue, "0", actor);
           total+=parseInt(element.system.value);
           attVal = parseInt(element.system.value);
           attColor = element.system.hexColor;
         } else {
-          roll = await CreateRollFromUserString(element.system.diceSize, "1d6");
+          roll = await CreateRollFromUserString(element.system.diceSize, "1d6", actor);
         }
         obj.roll = roll;
         total+=roll.total;
@@ -384,7 +383,7 @@ async _onRollToDye(event) {
     content: chatContent,
     rolls: colorRollArray, //passing this for dice so nice.
     sound: CONFIG.sounds.dice,
-    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    type: CONST.CHAT_MESSAGE_STYLES.ROLL,
     }
   );
   return;
@@ -406,7 +405,7 @@ async _onRollToRecover(event) {
   let bonuses = userInput.bonuses;
 
   var formulaRoll;
-  formulaRoll = await CreateRollFromUserString(bonuses, "0");
+  formulaRoll = await CreateRollFromUserString(bonuses, "0",actor);
   total+=formulaRoll.total;
   colorRollArray.push(formulaRoll);
 
@@ -428,7 +427,7 @@ async _onRollToRecover(event) {
         obj.colorItem = element;
         total+= parseInt(element.system.value);
         attVal+= parseInt(element.system.value);
-        var roll = await CreateRollFromUserString(element.system.diceSize, "1d6");
+        var roll = await CreateRollFromUserString(element.system.diceSize, "1d6",actor);
         obj.roll = roll;
         total+=roll.total;
         colorArray.push(obj);
@@ -474,7 +473,7 @@ async _onRollToRecover(event) {
     content: chatContent,
     rolls: colorRollArray, //passing this for dice so nice.
     sound: CONFIG.sounds.dice,
-    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    type: CONST.CHAT_MESSAGE_STYLES.ROLL,
     }
   );
   return;
@@ -515,7 +514,7 @@ async _onRollToDo(event) {
   let selectedColorID = userInput.selectedColor;
 
   var formulaRoll;
-  formulaRoll = await CreateRollFromUserString(bonuses, "0")
+  formulaRoll = await CreateRollFromUserString(bonuses, "0",actor)
   total+=formulaRoll.total;
   rollArray.push(formulaRoll);
 
@@ -524,7 +523,7 @@ async _onRollToDo(event) {
   if(selectedColorID == "wild")
   {
     //Roll wild option
-    colorRoll = await new Roll("1d6").roll({async: true});
+    colorRoll = await CreateRollFromUserString("1d6", "1d6", actor);
 
     //create a fake color for the chat message
     color = {};
@@ -538,20 +537,19 @@ async _onRollToDo(event) {
     color = actor.items.get(selectedColorID);
     //If this is the swing, set the swing die.
     if(color.system.isSwing) {
-      colorRoll = await CreateRollFromUserString(color.system.swingValue, "0");
+      colorRoll = await CreateRollFromUserString(color.system.swingValue, "0", actor);
     }
     else
     {
       //Not the swing so we roll the color's die instead
-      colorRoll = await CreateRollFromUserString(color.system.diceSize, "1d6");
+      colorRoll = await CreateRollFromUserString(color.system.diceSize, "1d6", actor);
     }
     total+=parseInt(color.system.value);
     attVal = parseInt(color.system.value);
     attColor = color.system.hexColor;
   }
   rollArray.push(colorRoll);
-  
-  var d20Roll = await new Roll("1d20").roll({async: true});
+  let d20Roll = await CreateRollFromUserString("1d20", "1d20", actor);
   
   total+=colorRoll.total + d20Roll.total;
   rollArray.push(d20Roll);
@@ -589,7 +587,7 @@ async _onRollToDo(event) {
     content: chatContent,
     rolls: rollArray, //passing this for dice so nice.
     sound: CONFIG.sounds.dice,
-    type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+    type: CONST.CHAT_MESSAGE_STYLES.ROLL,
     }
   );
   return;
@@ -782,7 +780,7 @@ async _onRollToDo(event) {
     // Get the type of item to create.
     const type = header.dataset.type;
     // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
+    const data = foundry.utils.duplicate(header.dataset);
     // Initialize a default name.
     const name = `New ${type.capitalize()}`;
     // Prepare the item object.
@@ -834,7 +832,9 @@ async _onRollToDo(event) {
     // Handle rolls that supply the formula directly.
     if (dataset.roll) {
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      
+      let rollData = this.actor?.getRollData() || {};
+      roll = Roll.create(TrimRoll(`${dataset.roll}`), rollData);
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
@@ -875,7 +875,7 @@ async function GetDoBonusDialogue(colorArray, defaultBonus)
             close: () => resolve({cancelled:true})
         }
 
-        new Dialog(data,null).render(true);
+        new Dialog(data,{}).render(true);
     });
 }
 function _processGetDyeBonusDialogue(form) {
@@ -907,7 +907,7 @@ async function GetDyeBonusDialogue(defaultBonus)
             close: () => resolve({cancelled:true})
         }
 
-        new Dialog(data,null).render(true);
+        new Dialog(data,{}).render(true);
     });
 }
 function _processGetRecoverBonusDialogue(form) {
@@ -939,7 +939,7 @@ async function GetRecoverBonusDialogue(defaultBonus)
             close: () => resolve({cancelled:true})
         }
 
-        new Dialog(data,null).render(true);
+        new Dialog(data,{}).render(true);
     });
 }
 function _processSetSwingDialogue(form) {
@@ -971,7 +971,7 @@ async function SetSwingBonusDialogue(colorArray)
             close: () => resolve({cancelled:true})
         }
 
-        new Dialog(data,null).render(true);
+        new Dialog(data,{}).render(true);
     });
 }
 async function CreateConfirmationDialogue()
@@ -997,7 +997,7 @@ async function CreateConfirmationDialogue()
             close: () => resolve({cancelled:true})
         }
 
-        new Dialog(data,null).render(true);
+        new Dialog(data,{}).render(true);
     });
 }
 //Removes all rolls with no result values. Dice so nice fails if it's passed a roll with no dice results.
@@ -1017,12 +1017,27 @@ var diceSoNiceArray = [];
   });
   return diceSoNiceArray;
 }
-//User can give us bad roll data so we return either the roll or a fake roll for a bad string
-async function CreateRollFromUserString(userDiceString, defaultDiceString)
+function TrimRoll(rollstr)
 {
+  let formula = rollstr?.trim() || "0";
+  if (/^-?\d+\$/.test(formula)) {
+    formula = `0 + ${formula}`;
+  } 
+  else if (formula.startsWith("+") || formula.startsWith("-")) {
+    formula = `0 ${formula}`;
+  }
+  return formula;
+}
+//User can give us bad roll data so we return either the roll or a fake roll for a bad string
+async function CreateRollFromUserString(userDiceString, defaultDiceString, actor)
+{
+  userDiceString = `${userDiceString}`;
+  defaultDiceString = `${defaultDiceString}`;
   let roll;
   try{
-    roll = await new Roll(userDiceString).roll({async: true});
+    let rollData = actor?.getRollData() || {};
+    roll = Roll.create(TrimRoll(userDiceString), rollData);
+    await roll.evaluate();
   }
   catch{
     console.log("Bad value of " + roll + " was ignored");
@@ -1036,7 +1051,9 @@ async function CreateRollFromUserString(userDiceString, defaultDiceString)
     {
       userDiceString = '0';
     }
-    roll = await new Roll(userDiceString).roll({async: true});
+    let rollData = actor?.getRollData() || {};
+    roll = Roll.create(TrimRoll(userDiceString), rollData);
+    await roll.evaluate();
   }
   return roll;
 }
